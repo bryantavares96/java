@@ -1,73 +1,43 @@
-public class Conta {
-    private String numConta;
-    private String agencia;
-    private double saldo;
+package com.company.model;
+
+import java.time.LocalDate;
+
+public abstract class Conta {
+    private int numero;
     private String nomeCliente;
+    protected double saldo;
+    private LocalDate dataAbertura;
 
-    public String getNumConta() {
-        return numConta;
+    public Conta(int numero, String nomeCliente){
+        this.numero = numero;
+        this.nomeCliente = nomeCliente;
+        this.dataAbertura = LocalDate.now();
     }
 
-    public void setNumConta(String numConta) {
-        this.numConta = numConta;
+    public void depositar(double valor){
+        if(valor < 0){
+            throw new IllegalArgumentException("Valor invalido");
+        }
+        saldo += valor;
+    }
+    public void sacar(double valor){
+        if(valor > saldo){
+            throw new IllegalArgumentException("Sem saldo para saque");
+        }
+        saldo -= valor;
     }
 
-    public String getAgencia() {
-        return agencia;
-    }
-
-    public void setAgencia(String agencia) {
-        this.agencia = agencia;
+    @Override
+    public String toString() {
+        return "Num. Conta: " + numero + "\n" +
+                "Nome Cliente: " + nomeCliente + "\n" +
+                "Saldo: " + saldo + "\n" +
+                "Abertura da Conta: " + dataAbertura + "\n";
     }
 
     public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-
-    public String getNomeCliente() {
-        return nomeCliente;
-    }
-
-    public void setNomeCliente(String nomeCliente) {
-        this.nomeCliente = nomeCliente;
-    }
-
-    public int sacar(double valor){
-        if(valor<=saldo){
-            saldo -= valor;
-            return 1;
-        }
-        return 0;
-    }
-    public void depositar(double valor){
-        saldo += valor;
-    }
-
-    //Métodos de negócios
-    public boolean registrarDeposito(double qtdEntrada){
-        if(qtdEntrada > 0){
-            saldo += qtdEntrada;
-            return true;
-        }
-        return false;
-    }
-    public boolean registrarSaque(double qtdSaida){
-        if(qtdSaida <= saldo){
-            saldo -= qtdSaida;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return "Dados da conta: " + numConta + "\n" +
-                "Nome Cliente: " + nomeCliente + "\n" +
-                "Agencia: " + agencia + "\n" +
-                "Saldo: " + saldo + "\n";
-    }
+    abstract void pagarTaxaMensal();
 }
